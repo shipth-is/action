@@ -1,0 +1,80 @@
+---
+name: "ShipThis CLI Official"
+description: "Build and upload Godot games to the App Store and Google Play"
+branding:
+  icon: "upload"
+  color: "gray-dark"
+
+inputs:
+  shipthis_token:
+    description: "Your ShipThis API key"
+    required: true
+    default: ""
+  ship_android:
+    description: "Build and upload to Google Play"
+    required: true
+    default: true
+  ship_ios:
+    description: "Build and upload to the App Store"
+    required: true
+    default: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: '24'
+    - name: "Install ShipThis CLI"
+      shell: bash
+      run: |
+        npm install -g shipthis
+    - name: Validate ShipThis Setup
+      shell: bash
+      run: |
+        shipthis status
+      env:
+        SHIPTHIS_TOKEN: ${{ inputs.shipthis_token }}
+    - name: Validate Game Status
+      if: inputs.ship_android == 'true' && inputs.ship_ios == 'true'
+      shell: bash
+      run: |
+        shipthis game status
+      env:
+        SHIPTHIS_TOKEN: ${{ inputs.shipthis_token }}
+    - name: Validate iOS Setup
+      if: inputs.ship_ios == 'true' && inputs.ship_android != 'true'
+      shell: bash
+      run: |
+        shipthis game ios status
+      env:
+        SHIPTHIS_TOKEN: ${{ inputs.shipthis_token }}
+    - name: Validate Android Setup
+      if: inputs.ship_android == 'true' && inputs.ship_ios != 'true'
+      shell: bash
+      run: |
+        shipthis game android status
+      env:
+        SHIPTHIS_TOKEN: ${{ inputs.shipthis_token }}
+    - name: Build Game (Both Platforms)
+      if: inputs.ship_android == 'true' && inputs.ship_ios == 'true'
+      shell: bash
+      run: |
+        shipthis game ship
+      env:
+        SHIPTHIS_TOKEN: ${{ inputs.shipthis_token }}
+    - name: Build iOS Game
+      if: inputs.ship_ios == 'true' && inputs.ship_android != 'true'
+      shell: bash
+      run: |
+        shipthis game ship --platform ios
+      env:
+        SHIPTHIS_TOKEN: ${{ inputs.shipthis_token }}
+    - name: Build Android Game
+      if: inputs.ship_android == 'true' && inputs.ship_ios != 'true'
+      shell: bash
+      run: |
+        shipthis game ship --platform android
+      env:
+        SHIPTHIS_TOKEN: ${{ inputs.shipthis_token }}
