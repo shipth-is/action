@@ -1,6 +1,8 @@
 ---
 name: "ShipThis CLI Official"
-description: "Build and upload Godot games to the App Store and Google Play"
+description: >
+  "Build and upload Godot games to the App Store (iOS)
+  and Google Play (Android)"
 branding:
   icon: "upload"
   color: "gray-dark"
