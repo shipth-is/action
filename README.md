@@ -8,14 +8,19 @@ build and upload your Godot games to the Google Play Store and Apple App Store.
 You will need a ShipThis API token to use this action. You can get one by
 installing the ShipThis CLI and logging in:
 
-```
+```bash
 npm install -g @shipth-is/cli
 shipthis login
 ```
-The token will be stored in your home directory in a file named
-`.shipthis.auth.json` in the key `shipthis_user.jwt`.
 
-Take this token and add it as a secret in your Github repository called
+You can then generate an api token for your project:
+
+```bash
+# Use --name if you want to give it a unique name
+shipthis apiKey create
+```
+
+Take this token secret and add it as a secret in your Github repository called
 `SHIPTHIS_TOKEN`.
 
 If you have not done so already, you will need to run through the
